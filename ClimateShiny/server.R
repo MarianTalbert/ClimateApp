@@ -20,7 +20,7 @@ shinyServer(function(input, output,session) {
 	#======================================	
 	 # create the map
    map <- createLeafletMap(session, "map")
-   
+  
   #===== Select Attribute Update =======#		
   observe({
 		if (input$Dataset=="PleaseSelect")
@@ -73,9 +73,9 @@ shinyServer(function(input, output,session) {
              opts=list(color='#FF0080')
               Bounds<-GetParkBoundary(Shape,ShapePath,ParkCode=input$AttributeValue,UNIT_CODE=input$Attribute,Buffer=NA)
               
-              for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
+           for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
               coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
-            map$addPolygon(
+              map$addPolygon(
               coords[,2],
               coords[,1],
               layerId=c(as.character(i)),
@@ -147,8 +147,9 @@ shinyServer(function(input, output,session) {
      if(input$AnomalyHist=="Prism") PastLst<-PrismLst 
        if(input$AnomalyHist=="Maurer") PastLst<-MaurerLst
        if(input$AnomalyHist=="TopoWx") PastLst<-TopoWxLst
-       
-  AnomalyPlot(PastLst[[as.numeric(input$HistVar)]],Baseline=input$Baseline,ParkName=ParkName,
+    
+  
+  AnomalyPlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,ParkName=ParkName,
    DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=2,writeMain=writeMain)
    })
    
@@ -167,7 +168,7 @@ shinyServer(function(input, output,session) {
        if(input$AnomalyHist=="Maurer") PastLst<-MaurerLst
        if(input$AnomalyHist=="TopoWx") PastLst<-TopoWxLst
        
-        ImagePlot(PastLst[[as.numeric(input$HistVar)]],Baseline=input$Baseline,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=2.1,writeMain=writeMain)
+        ImagePlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=2.1,writeMain=writeMain)
        })
       
       output$Maps<-renderPlot({

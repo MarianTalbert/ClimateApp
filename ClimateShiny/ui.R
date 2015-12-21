@@ -1,4 +1,4 @@
- library(shiny)
+ 
 LatLst<-as.list(seq(from=29,to=50))
 LonLst<-as.list(seq(from=-125,to=-67))
 names(LatLst)<-seq(from=29,to=50) 
@@ -212,7 +212,7 @@ tabPanel("Anomaly Plots",
                            "TopoWx"="TopoWx"
                            ),
                         selected = "Maurer"),
-               radioButtons("HistVar", 
+               radioButtons("AnomalyVar", 
                     label = h3("Variable"), 
                     choices = list("Max Temp" = 1, 
                  "Min Temp" = 2,
@@ -227,20 +227,11 @@ tabPanel("Anomaly Plots",
                    div(class="row",    
                     div(class="span5",       
                         div(class="span8",plotOutput("AnomalyPlot")), 
-                    sliderInput("Baseline", label = h4("Baseline Years"),
-                            min = 1895, max = 2010, value =c(1895,1980),format="#",width="100%"))
-                      
-               )),
-              wellPanel(  
-                h2("Monthly Anomaly Plots"),
-                 div(class="row",    
-                    div(class="span5",       
                         div(class="span8",plotOutput("ImagePlot")), 
                     sliderInput("Baseline", label = h4("Baseline Years"),
                             min = 1895, max = 2010, value =c(1895,1980),format="#",width="100%"))
                       
-                     )       
-               )     
+               ))
         )
 ),    
 #===============================================
@@ -254,6 +245,11 @@ tabPanel("Generate Maps",
                  ),
                  selected = 1),width=2),
     mainPanel(
+      leafletMap("ClimMap", 700, 550, initialTileLayer = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+           initialTileLayerAttribution = 
+             HTML('&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'),
+            options = list(center = c(37.45, -93.85),
+            zoom = 4, maxBounds = list(list(15.961329,-129.92981), list(52.908902,-56.80481)))),
            plotOutput("Maps",height="900px",width="500px"),
            img(src="NCCSClogo.jpg",height=170,width=220) 
      )),

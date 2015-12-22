@@ -34,22 +34,23 @@ server <- function(input, output, session) {
   MapLst<-reactive({
     if(input$mapVar=="Temperature") return(ShinyMapLst[[1]])
     if(input$mapVar=="Precipitation") return(ShinyMapLst[[2]])
-     })
+        })
   
     output$Map <- renderLeaflet({
       dataset <- MapLst()
-      leaflet() %>% addTiles() %>%  addRasterImage(dataset[[1]], colors = MapCols(), opacity = 0.8) %>%
-        addLegend(pal = pal, values = values(dataset[[1]]),
-                  title = "Map")
-      #for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
-       # coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
-       # MyMap<- addPolygons(MyMap,
-       #                     lat=coords[,2],
-        #                    lng=coords[,1],
-        #                    fill=FALSE,
-        #                    layerId=as.character(i))
+      browser()
+      MyMap<-leaflet() %>% addTiles() %>%  addRasterImage(dataset[[1]], colors = MapCols(), opacity = 0.8) %>%
+        addLegend(pal =pal, values = values(dataset[[1]]),title="map")
+      for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
+        coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
+        MyMap<- addPolygons(MyMap,
+                            lat=coords[,2],
+                            lng=coords[,1],
+                            fill=FALSE,
+                            layerId=as.character(i))
       
-      #} 
+      }
+      return(MyMap)
     })
   
 

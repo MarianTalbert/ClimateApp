@@ -19,7 +19,37 @@ shinyServer(function(input, output,session) {
 		})
 	#======================================	
 	 # create the map
-   map <- createLeafletMap(session, "map")
+  Mapi=reactive({   
+    switch(input$mapVar,
+           Temperature = 1,
+           Precipitation = 2,
+           Elevation =3)})
+  MapCols=reactive({
+    switch(input$mapVar,
+           Temperature = "OrRd",
+           Precipitation = "BuGn",
+           Elevation ="Spectral")})
+  MapLab=reactive({
+    switch(input$mapVar,
+           Temperature = "Average Annual Temperature",
+           Precipitation = "Total Annual Precipitation",
+           Elevation ="Elevation")})
+  Mi<-isolate(Mapi())
+  MapLst<-reactive({
+    if(input$mapVar=="Temperature") return(ShinyMapLst[[1]])
+    if(input$mapVar=="Precipitation") return(ShinyMapLst[[2]])
+    if(input$mapVar=="Elevation") return(ShinyMapLst[[3]])
+  })
+  
+  output$Map <- renderLeaflet({
+    dataset <- MapLst()
+    
+    pal = colorNumeric(MapCols(), values(dataset[[i]]),
+                       na.color = "transparent")
+    leaflet() %>% addTiles() %>%  addRasterImage(dataset[[i]], colors = pal, opacity = 0.8) %>%
+      addLegend(pal = pal, values = values(dataset[[i]]),
+                title = input$mapVar)
+  })
   
   #===== Select Attribute Update =======#		
   observe({
@@ -67,20 +97,20 @@ shinyServer(function(input, output,session) {
               return(NULL)
             } else {
               
-            map$clearShapes()
+            #Map$clearShapes()
             
             #opts=list(color='#4A9')
-             opts=list(color='#FF0080')
+            # opts=list(color='#FF0080')
               Bounds<-GetParkBoundary(Shape,ShapePath,ParkCode=input$AttributeValue,UNIT_CODE=input$Attribute,Buffer=NA)
-              
-           for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
-              coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
-              map$addPolygon(
-              coords[,2],
-              coords[,1],
-              layerId=c(as.character(i)),
-              options=opts,
-              defaultOptions=opts)}
+             
+              for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
+                coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
+                output$Map<- addPolygons(output$Map,
+                                    lat=coords[,2],
+                                    lng=coords[,1],
+                                    fill=FALSE,
+                                    layerId=as.character(i))
+              }
             
            }
         })	

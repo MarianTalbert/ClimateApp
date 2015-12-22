@@ -13,16 +13,15 @@ shinyUI(navbarPage("Climate Primer",
     mainPanel(
        wellPanel(              
            h2("Specify a bounding box for the study"),       
-          
-          fluidRow(
-           column(2,h3("Latitude")),
+         fluidRow(
+            column(2,h3("Latitude:   From")),
            column(1,
                selectInput("LatStart",choices=LatLst, 
                    selected = 29,label="")),
             column(2,
               selectInput("LatSDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
                  selected = 1,label="")),
-             column(1,h3("To")),
+            column(1,h3("To")),
              column(1,
                selectInput("LatEnd",choices=LatLst, 
               selected = 50,label="")),                       
@@ -30,8 +29,8 @@ shinyUI(navbarPage("Climate Primer",
               selectInput("LatEtDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
                  selected = 1,label=""))
           ),
-          fluidRow(
-           column(2,h3("Longitude")),
+         fluidRow(
+           column(2,h3("Longitude:   From")),
            column(1,
                selectInput("LonStart",choices=LonLst, 
                   selected =-125,label="")),
@@ -44,12 +43,10 @@ shinyUI(navbarPage("Climate Primer",
               selected = -67,label="")),                       
              column(2,
                selectInput("LonEtDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
-                  selected = 1,label=""))
-          )
+                  selected = 1,label=""))     
+           ),
           
-        ),
-      
-        wellPanel(
+        
                 h2("or upload a shapefile"),
                 helpText("Please either select from the available", 
                       "shapefiles, upload the desired file or specify a bounding box."),
@@ -62,15 +59,23 @@ shinyUI(navbarPage("Climate Primer",
                    selectInput("Attribute", label=h4("Select Attribute"),"Loading...")), 
                   column(3,  
                    selectInput("AttributeValue", label = h4("Select the Attribute Value"), 
-                  "Loading...")))
-        ),       
-       
-        actionButton("DisplayShape", label = "Display study area on map"),  
-        leafletMap("map", 700, 550, initialTileLayer = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            initialTileLayerAttribution = 
-            HTML('&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'),
-            options = list(center = c(37.45, -93.85),
-              zoom = 4, maxBounds = list(list(15.961329,-129.92981), list(52.908902,-56.80481)))),
+                  "Loading..."))),
+          actionButton("DisplayShape", label = "Display study area on map"),
+          style="padding: 5px;"),       
+       fluidRow(
+         column(2,
+        selectInput("mapVar", "Variable",
+                   choices=c("Precipitation","Temperature","Elevation"),
+                   selected="Temperature")),
+       column(2,
+        selectInput("varTime", "Time Period",
+                   choices=c("1990s","2040s","2080s"),
+                   selected="1990s")),
+       column(2,
+       checkboxInput("diffFromHist", label = "Show difference from historic period", value = FALSE))
+       ),
+         
+       leafletOutput("Map"),
          img(src="NCCSClogo.jpg",height=170,width=220)      
               
     )
@@ -234,25 +239,7 @@ tabPanel("Anomaly Plots",
                ))
         )
 ),    
-#===============================================
-# ==========  Mapped Output Tab ==========#    
-tabPanel("Generate Maps",
-         sidebarPanel(
-             radioButtons("mapVar", 
-                 label = h3("Variable"), 
-                 choices = list("Avgerage Temperature"  = 1, 
-                                "Precipitation"    = 2
-                 ),
-                 selected = 1),width=2),
-    mainPanel(
-      leafletMap("ClimMap", 700, 550, initialTileLayer = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-           initialTileLayerAttribution = 
-             HTML('&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'),
-            options = list(center = c(37.45, -93.85),
-            zoom = 4, maxBounds = list(list(15.961329,-129.92981), list(52.908902,-56.80481)))),
-           plotOutput("Maps",height="900px",width="500px"),
-           img(src="NCCSClogo.jpg",height=170,width=220) 
-     )),
+
 #===============================================
 # ==========  Model Scatterplot Tab ==========#    
 tabPanel("Projection Scatterplot",

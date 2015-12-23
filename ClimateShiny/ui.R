@@ -200,7 +200,7 @@ tabPanel("Historic Trends",
            column(6,
              wellPanel(
                 sliderInput("MonthBase", label = h2("Years to use for calculating monthly normals"),
-                            min = 1895, max = 2010, value =c(1951,1980),format="#",width="100%"),    
+                            min = 1895, max = 2010, value =c(1951,1980),sep="",width="100%"),    
                 plotOutput("MonthlyLine"),
                 helpText("Monthly normals are the monthly mean (or total for precipitatoin)",
                         "of the time series calculated over the specified set of years")
@@ -234,7 +234,7 @@ tabPanel("Anomaly Plots",
                         div(class="span8",plotOutput("AnomalyPlot")), 
                         div(class="span8",plotOutput("ImagePlot")), 
                     sliderInput("Baseline", label = h4("Baseline Years"),
-                            min = 1895, max = 2010, value =c(1895,1980),format="#",width="100%"))
+                            min = 1895, max = 2010, value =c(1895,1980),sep="",width="100%"))
                       
                ))
         )
@@ -263,10 +263,10 @@ tabPanel("Projection Scatterplot",
                  h2("Scatterplots showing how models compare for the region of interest"),
                   plotOutput("ScatterPlot",width="750px",height="650px"),
                 fluidRow( column(6,sliderInput("ScatterBase", label = h4("Baseline Years"),
-                  min = 1895, max = 2005, value =c(1951,1980),format="#",width="50%")),         
+                  min = 1895, max = 2005, value =c(1951,1980),sep="",width="50%")),         
                         column(6,
                   sliderInput("ScatterProj", label = h4("Future Period"),
-                  min = 2015, max = 2100, value =c(2050,2070),format="#",width="50%"))
+                  min = 2015, max = 2100, value =c(2050,2070),sep="",width="50%"))
               )
               
               
@@ -304,13 +304,14 @@ tabPanel("Other",
                      ),
                   selected = 1),
               sliderInput("BaselineTime", label = h4("Baseline Years"),
-              min = 1895, max = as.numeric(as.character(format(Sys.time(),"%Y"))), value =c(1895,2010),format="#",width="100%"),         
+              min = 1895, max = as.numeric(as.character(format(Sys.time(),"%Y"))), value =c(1895,2010),
+              sep="",width="100%"),         
               
               sliderInput("FutureTime1", label = h4("Future Period 1"),
-              min = 2015, max = 2100, value =c(2030,2060),format="#",width="50%"),
+              min = 2015, max = 2100, value =c(2030,2060),sep="",width="50%"),
               
               sliderInput("FutureTime2", label = h4("Future Period 2"),
-              min = 2015, max = 2100, value =c(2070,2100),format="#",width="50%"),
+              min = 2015, max = 2100, value =c(2070,2100),sep="",width="50%"),
               
               selectInput("ColorScale", label = h4("Color Scale"), 
                 choices = list("Default"=0,"yellow to red" = 1, "teal to blue" = 2,

@@ -42,13 +42,26 @@ shinyServer(function(input, output,session) {
   })
   
   output$Map <- renderLeaflet({
-    dataset <- MapLst()
     
-    pal = colorNumeric(MapCols(), values(dataset[[i]]),
+    dataset <- MapLst()
+    pal = colorNumeric(MapCols(), values(dataset[[1]]),
                        na.color = "transparent")
-    leaflet() %>% addTiles() %>%  addRasterImage(dataset[[i]], colors = pal, opacity = 0.8) %>%
-      addLegend(pal = pal, values = values(dataset[[i]]),
-                title = input$mapVar)
+    MyMap<-leaflet() %>% addTiles() %>%  addRasterImage(dataset[[1]], colors = MapCols(), opacity = 0.8) %>%
+      addLegend(pal =pal, values = values(dataset[[1]]),title="map")
+    if(input$DisplayShape){
+        Bounds<-GetParkBoundary(Shape,ShapePath,ParkCode=input$AttributeValue,
+                                UNIT_CODE=input$Attribute,Buffer=NA)
+        for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
+          coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
+          MyMap<- addPolygons(MyMap,
+                              lat=coords[,2],
+                              lng=coords[,1],
+                              fill=FALSE,
+                              layerId=as.character(i))
+          
+        }
+    }
+    return(MyMap)
   })
   
   #===== Select Attribute Update =======#		
@@ -91,29 +104,6 @@ shinyServer(function(input, output,session) {
 		})	
 
 #====== Once an Attribute value is selected  add it to the map   
-  observe({ 
-
-            if(!(input$DisplayShape)) {
-              return(NULL)
-            } else {
-              
-            #Map$clearShapes()
-            
-            #opts=list(color='#4A9')
-            # opts=list(color='#FF0080')
-              Bounds<-GetParkBoundary(Shape,ShapePath,ParkCode=input$AttributeValue,UNIT_CODE=input$Attribute,Buffer=NA)
-             
-              for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
-                coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
-                output$Map<- addPolygons(output$Map,
-                                    lat=coords[,2],
-                                    lng=coords[,1],
-                                    fill=FALSE,
-                                    layerId=as.character(i))
-              }
-            
-           }
-        })	
 
          output$Emissions<-renderPlot({
         if(input$ObsRibbon=="Prism") PastLst<-PrismLst 

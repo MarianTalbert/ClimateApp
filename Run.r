@@ -1,5 +1,8 @@
-load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\UnitedStates\\studyWorkspace")
-load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\Alabama\\studyWorkspace")
+load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\UnitedStates\\USProjectionMaps")
+#load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\Alabama\\studyWorkspace")
+load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\Colorado\\studyWorkspace")
+#For tomorrow consistent color scales across all maps THERE SHOULD BE FIVE HERE I FORGOT RCP
+
 
 setwd("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp")
 sourceList<-list("ClimateShiny/external/ChkLibs.r","ClimateShiny/external/GetParkBoundary.r")

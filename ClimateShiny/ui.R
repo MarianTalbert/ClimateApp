@@ -19,14 +19,22 @@ shinyUI(navbarPage("Climate Primer",
                selectInput("LatStart",choices=LatLst, 
                    selected = 29,label="")),
             column(2,
-              selectInput("LatSDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
+              selectInput("LatSDec",choices=list('0.0625'=0.0625,'0.125'=0.125,'0.1875'=0.1875,
+                                                 '0.2500'=0.2500,'0.3125'=0.3125,'0.375'=0.375,
+                                                 '0.4375'=0.4375,'0.5000'=0.5000,'0.5625'=0.5625,
+                                                 '0.6250'=0.625,'0.6875'=0.6875,'0.7500'=0.75,
+                                                 '0.8125'=0.8125,'0.875'=0.875,'0.9375'=0.9375), 
                  selected = 1,label="")),
             column(1,h3("To")),
              column(1,
                selectInput("LatEnd",choices=LatLst, 
               selected = 50,label="")),                       
              column(2,
-              selectInput("LatEtDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
+              selectInput("LatEtDec",choices=list('0.0625'=0.0625,'0.125'=0.125,'0.1875'=0.1875,
+                                                  '0.2500'=0.2500,'0.3125'=0.3125,'0.375'=0.375,
+                                                  '0.4375'=0.4375,'0.5000'=0.5000,'0.5625'=0.5625,
+                                                  '0.6250'=0.625,'0.6875'=0.6875,'0.7500'=0.75,
+                                                  '0.8125'=0.8125,'0.875'=0.875,'0.9375'=0.9375), 
                  selected = 1,label=""))
           ),
          fluidRow(
@@ -68,9 +76,14 @@ shinyUI(navbarPage("Climate Primer",
                    choices=c("Precipitation","Temperature","Elevation"),
                    selected="Temperature")),
        column(2,
-        selectInput("varTime", "Time Period",
-                   choices=c("1990s","2040s","2080s"),
-                   selected="1990s")),
+        selectInput("mapRCP", "Emissions Path",
+                   choices=c("High (RCP 8.5)","Mid Low (RCP 4.5)"),
+                   selected="Mid Low (RCP 4.5)")),
+       column(2,
+              selectInput("mapTime", "Time Period",
+                          choices=c("1990s","2040s","2080s"),
+                          selected="1990s")),
+       column(2,sliderInput("mapTrans","Transparency", 0, 1,.8)),    
        column(2,
        checkboxInput("diffFromHist", label = "Show difference from historic period", value = FALSE))
        ),
@@ -281,51 +294,5 @@ tabPanel("Projection Scatterplot",
                 includeHTML("include.html"),
                  img(src="CCSClogo.jpg",height=170,width=220)  
             )
-         ),   
-tabPanel("Other",    
-     sidebarPanel(position="right",
-            h1("Map Specification"),
-            #helpText("Please either select from the available", 
-             #     "shapefiles or upload the desired file.")
-            selectInput("MappedData", label = h3("Dataset to use"), 
-                choices = list("PRISM" = 1, "Maurer" = 2,
-                       "1/8th degree BSCD projections" = 3,"NEX"=4), selected = 1),
-             selectInput("MappedVar", label = h4("Variable"), 
-                choices = list("Avg. Annual Temperature" = "Tmp", "Precipitation"="Pr","Available Color Scales"="Co"), selected = 1),
-              selectInput("MappedSubset", label = h4("Seasonal Subset"), 
-                choices = list("FullYear"=1,"Jan" = 2, "Feb" = 3,
-                       "March" = 4,"April"=5), selected = 1),
-              checkboxGroupInput("MapRCP", 
-                  label = h4("RCPs for Plotting"), 
-                  choices = list("RCP 2.6" = 1, 
-                     "RCP 4.5" = 2,
-                     "RCP 6.0" = 3,
-                     "RCP 8.5" = 4
-                     ),
-                  selected = 1),
-              sliderInput("BaselineTime", label = h4("Baseline Years"),
-              min = 1895, max = as.numeric(as.character(format(Sys.time(),"%Y"))), value =c(1895,2010),
-              sep="",width="100%"),         
-              
-              sliderInput("FutureTime1", label = h4("Future Period 1"),
-              min = 2015, max = 2100, value =c(2030,2060),sep="",width="50%"),
-              
-              sliderInput("FutureTime2", label = h4("Future Period 2"),
-              min = 2015, max = 2100, value =c(2070,2100),sep="",width="50%"),
-              
-              selectInput("ColorScale", label = h4("Color Scale"), 
-                choices = list("Default"=0,"yellow to red" = 1, "teal to blue" = 2,
-                       "red to blue" = 3,"brown to blue"=4,"green to red"=4,"brown to purple"=4), selected = 0),         
-                       
-              checkboxGroupInput("AddBoundaries", 
-                  label = h4("Add boundaries"), 
-                  choices = list("Shape Boundary" = 1, 
-                     "State Boundary" = 2
-                     ),
-                  selected = 1), 
-            width=2
-                                                      
-             )     
-                        
-  )
+         )
 ) )

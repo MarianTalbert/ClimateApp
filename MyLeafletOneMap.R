@@ -34,7 +34,7 @@ server <- function(input, output, session) {
   MapLst<-reactive({
     if(input$mapVar=="Temperature") return(ShinyMapLst[[1]])
     if(input$mapVar=="Precipitation") return(ShinyMapLst[[2]])
-    if(input$mapVar=="Elevation") return(as.list(ShinyMapLst[[3]]))
+    if(input$mapVar=="Elevation") return(list(ShinyMapLst[[3]]))
         })
   
     output$Map <- renderLeaflet({

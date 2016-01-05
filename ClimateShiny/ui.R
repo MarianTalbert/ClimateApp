@@ -244,12 +244,23 @@ tabPanel("Anomaly Plots",
                    h2("Anomaly Plots"),
                    div(class="row",    
                     div(class="span5",       
-                        div(class="span8",plotOutput("AnomalyPlot")), 
-                        div(class="span8",plotOutput("ImagePlot")), 
+                        div(class="span8",plotOutput("AnomalyPlot")),
+                        div(class="span8",helpText("The yearly anomaly plot shows",
+                         "depicts the quantity of interest relative to the mean",
+                         "over the selected baseline period.")),
+                        div(class="span8",plotOutput("ImagePlot")),
+                        div(class="span8",helpText("The image plot shows the normalized",
+                         "difference from a baseline period for each month",
+                         "and year.  The baseline is calculated monthly within",
+                         "the specified year range.  They pixels are normalized ",
+                         "by month and colors range from + or - 2.5 Standard ",
+                         "deviations from the mean of the baseline period.")),
                     sliderInput("Baseline", label = h4("Baseline Years"),
                             min = 1895, max = 2010, value =c(1895,1980),sep="",width="100%"))
                       
                ))
+
+               
         )
 ),    
 

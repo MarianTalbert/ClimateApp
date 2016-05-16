@@ -221,8 +221,9 @@ shinyServer(function(input, output,session) {
                     TopoWx=TopoWxLst[[as.numeric(input$HistVar)]])
                      if(as.numeric(input$HistVar)==4) PastLst<-PastLst[1:2] #no TopoWx for Precip     
                                     }
-                      
-      MonthlyLine(Observational=PastLst,Baseline=input$MonthBase,cexMult=1.6,plotLegend=TRUE)
+        # browser()
+      MonthlyLine(Observational=PastLst,Baseline=input$MonthBase,cexMult=1.6,plotLegend=TRUE,
+      PlotUnits=PlotUnits[ifelse(input$HistVar==4,2,1)])
                
   })
    

@@ -285,7 +285,7 @@ tabPanel("Projection Scatterplot",
          
          mainPanel(
                  h2("Scatterplots showing how models compare for the region of interest"),
-                  plotOutput("ScatterPlot",width="750px",height="650px"),
+                  plotOutput("ScatterPlot",width="850px",height="750px"),
                 fluidRow( column(6,sliderInput("ScatterBase", label = h4("Baseline Years"),
                   min = 1895, max = 2005, value =c(1951,1980),sep="",width="50%")),         
                         column(6,

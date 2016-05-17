@@ -19,9 +19,7 @@ shinyUI(navbarPage("Climate Primer",
                  column(2,
                    selectInput("NationalPark", choices=as.character(NpsLst),
                                label=h4("National Park"),selected="Adams")),
-
-          actionButton("DisplayShape", label = "Display study area on map"),
-          style="padding: 5px;"),       
+          style="padding: 5px;"),
        fluidRow(
          column(2,
         selectInput("mapVar", "Variable",

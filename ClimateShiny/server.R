@@ -114,7 +114,6 @@ shinyServer(function(input, output,session) {
     MyMap<-leaflet() %>% addTiles() %>%  addRasterImage(dataset[[TimePeriod]][[RcpChoice]], colors = MapPal(), 
                     opacity = input$mapTrans) %>%
       addLegend(pal = MapPal(), values = VarRng[[values$rangeIndx]],title=Title)
-    if(input$DisplayShape & !is.null(input$NationalPark)){
 
          Code<-NpsLst[which(input$NationalPark== NpsLst,arr.ind=TRUE)]
         Bounds<-NP[which(Code==as.character(NP$PARKNAME),arr.ind=TRUE),]
@@ -127,7 +126,7 @@ shinyServer(function(input, output,session) {
                               layerId=as.character(i))
           
         }
-    }
+
     return(MyMap)
   })
   

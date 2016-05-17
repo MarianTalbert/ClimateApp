@@ -11,63 +11,15 @@ shinyUI(navbarPage("Climate Primer",
 
         #========= Main Panel================#
     mainPanel(
-       wellPanel(              
-           h2("Specify a bounding box for the study"),       
-         fluidRow(
-            column(2,h3("Latitude:   From")),
-           column(1,
-               selectInput("LatStart",choices=LatLst, 
-                   selected = 29,label="")),
-            column(2,
-              selectInput("LatSDec",choices=list('0.0625'=0.0625,'0.125'=0.125,'0.1875'=0.1875,
-                                                 '0.2500'=0.2500,'0.3125'=0.3125,'0.375'=0.375,
-                                                 '0.4375'=0.4375,'0.5000'=0.5000,'0.5625'=0.5625,
-                                                 '0.6250'=0.625,'0.6875'=0.6875,'0.7500'=0.75,
-                                                 '0.8125'=0.8125,'0.875'=0.875,'0.9375'=0.9375), 
-                 selected = 1,label="")),
-            column(1,h3("To")),
-             column(1,
-               selectInput("LatEnd",choices=LatLst, 
-              selected = 50,label="")),                       
-             column(2,
-              selectInput("LatEtDec",choices=list('0.0625'=0.0625,'0.125'=0.125,'0.1875'=0.1875,
-                                                  '0.2500'=0.2500,'0.3125'=0.3125,'0.375'=0.375,
-                                                  '0.4375'=0.4375,'0.5000'=0.5000,'0.5625'=0.5625,
-                                                  '0.6250'=0.625,'0.6875'=0.6875,'0.7500'=0.75,
-                                                  '0.8125'=0.8125,'0.875'=0.875,'0.9375'=0.9375), 
-                 selected = 1,label=""))
-          ),
-         fluidRow(
-           column(2,h3("Longitude:   From")),
-           column(1,
-               selectInput("LonStart",choices=LonLst, 
-                  selected =-125,label="")),
-            column(2,
-               selectInput("LonSDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
-                  selected = 1,label="")),
-             column(1,h3("To")),
-             column(1,
-               selectInput("LonEnd",choices=LonLst, 
-              selected = -67,label="")),                       
-             column(2,
-               selectInput("LonEtDec",choices=list(".0625" = .0625, ".1875" = .1875, ".3125" = .3125), 
-                  selected = 1,label=""))     
-           ),
-          
-        
-                h2("or upload a shapefile"),
-                helpText("Please either select from the available", 
-                      "shapefiles, upload the desired file or specify a bounding box."),
+       wellPanel(
                  fluidRow(
+#                  column(2,
+#                     selectInput("States", choices=StateLst,label=h4("Select State"))),
+#                     h2("or"),
                  column(2,
-                    selectInput("Dataset", choices=names(ShapeList),label=h4("Available Shapefiles"))),
-                 column(5,
-                    fileInput("InputFile", label = h4("Please point to the .zip containing the shapefile"))),
-                 column(2,
-                   selectInput("Attribute", label=h4("Select Attribute"),"Loading...")), 
-                  column(3,  
-                   selectInput("AttributeValue", label = h4("Select the Attribute Value"), 
-                  "Loading..."))),
+                   selectInput("NationalPark", choices=as.character(NpsLst),
+                               label=h4("National Park"),selected="Adams")),
+
           actionButton("DisplayShape", label = "Display study area on map"),
           style="padding: 5px;"),       
        fluidRow(
@@ -85,17 +37,18 @@ shinyUI(navbarPage("Climate Primer",
                           selected="1990s")),
        column(2,sliderInput("mapTrans","Transparency", 0, 1,.8)),    
        column(2,
-       checkboxInput("diffFromHist", label = "Show difference from historic period", value = FALSE))
+       checkboxInput("diffFromHist", label = "Show difference from historic period", 
+                     value = FALSE))
        ),
          
        leafletOutput("Map"),
          img(src="NCCSClogo.jpg",height=170,width=220)      
               
-    )
+    ) #end well panel
    
         
-    ),
-    
+    )
+ ),
    #========================================
    #  Projected Trends  
  tabPanel("Projected Trends",
@@ -106,8 +59,9 @@ shinyUI(navbarPage("Climate Primer",
               value = "Enter text ..."),
 			
             radioButtons("PlotUnits", label = h4("Plot Units"),
-              choices = list("US units (F/ inches per month)" = "c(\"F\",\"In\")",
-                              "Metric (C/mm per month)" = "c(\"C\",\"mm\")")
+              choices = list("Metric (C/mm per month)" = "c(\"C\",\"mm\")",
+              "US units (F/ inches per month)" = "c(\"F\",\"In\")"
+                              )
                         ),
               radioButtons("Var", 
                     label = h3("Variable"), 

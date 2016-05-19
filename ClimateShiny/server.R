@@ -109,14 +109,14 @@ shinyServer(function(input, output,session) {
         
       }
     }
-    
-   
+
     MyMap<-leaflet() %>% addTiles() %>%  addRasterImage(dataset[[TimePeriod]][[RcpChoice]], colors = MapPal(), 
                     opacity = input$mapTrans) %>%
       addLegend(pal = MapPal(), values = VarRng[[values$rangeIndx]],title=Title)
-
+         #I believe this can be simplified now
+         #browser()
          Code<-NpsLst[which(input$NationalPark== NpsLst,arr.ind=TRUE)]
-        Bounds<-NP[which(Code==as.character(NP$PARKNAME),arr.ind=TRUE),]
+        Bounds<-NP[which(Code==as.character(NP$UNIT_NAME),arr.ind=TRUE),]
         for(i in 1:length(Bounds@polygons[[1]]@Polygons)){
           coords<-Bounds@polygons[[1]]@Polygons[[i]]@coords
           MyMap<- addPolygons(MyMap,
@@ -190,9 +190,10 @@ shinyServer(function(input, output,session) {
                         
                     if(as.numeric(input$HistVar)==4) PastLst<-PastLst[1:2] #no TopoWx for Preci 
                                     }
+
        TminPlot<-YearlyLinePlot(PastLst,MovAvgPeriod=10,
                    Xlab=(""),
-                   MovAvg=input$MovAvg,LM=input$Trend,maCol="blue",
+                   MovAvg=input$MovAvg,LM=input$Trend,maCol="blue",Main=input$NationalPark,
                    DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=writeMain)
                
   })

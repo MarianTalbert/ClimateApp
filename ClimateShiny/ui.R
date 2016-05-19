@@ -16,7 +16,7 @@ shinyUI(navbarPage("Climate Primer",
 #                  column(2,
 #                     selectInput("States", choices=StateLst,label=h4("Select State"))),
 #                     h2("or"),
-                 column(2,
+                 column(5,
                    selectInput("NationalPark", choices=as.character(NpsLst),
                                label=h4("National Park"),selected="Adams")),
           style="padding: 5px;"),
@@ -40,7 +40,7 @@ shinyUI(navbarPage("Climate Primer",
        ),
          
        leafletOutput("Map"),
-         img(src="NCCSClogo.jpg",height=170,width=220)      
+         img(src="NCCSClogo.jpg",height=150,width=220)
               
     ) #end well panel
    

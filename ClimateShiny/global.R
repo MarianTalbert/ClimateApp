@@ -1,11 +1,8 @@
-#Fort Globals
-ShapeList<-list(PleaseSelect="",
-                NpsShapes= "C:\\Users\\mtalbert\\Desktop\\Climate\\InputLayers\\NPS_SmallParksBuffered\\SmallParksBuffered.shp",
-                StateBounds = "C:\\Users\\mtalbert\\Desktop\\Climate\\InputLayers\\StateBounds\\statep010.shp")
+#this is the directory for uploaded shapefiles not needed for Nps but probably for everything else
 TempLoc<-"C:\\Users\\mtalbert\\Desktop\\Climate\\InputLayers\\Temp"
 
 WorkspacePath<-"C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\NPSSummary"
- NpsShapes =file.path("C:\\Users\\mtalbert\\Desktop\\Climate\\InputLayers\\nps_boundary\\nps_boundary.shp")
+NpsShapes =file.path("C:\\Users\\mtalbert\\Desktop\\Climate\\InputLayers\\nps_boundary\\nps_boundary.shp")
 
  NP<-readShapePoly(NpsShapes)
  

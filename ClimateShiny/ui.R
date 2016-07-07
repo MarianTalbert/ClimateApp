@@ -51,11 +51,6 @@ shinyUI(navbarPage("Climate Primer",
    #  Projected Trends  
  tabPanel("Projected Trends",
      sidebarPanel(
-                                                
-         h2("Settings that Apply for all Graphics"),
-            textInput("ParkName", label = h4("Study area name for graphics"), 
-              value = "Enter text ..."),
-			
             radioButtons("PlotUnits", label = h4("Plot Units"),
               choices = list("Metric (C/mm per month)" = "c(\"C\",\"mm\")",
               "US units (F/ inches per month)" = "c(\"F\",\"In\")"
@@ -97,11 +92,11 @@ shinyUI(navbarPage("Climate Primer",
         
         ),
       mainPanel(
-        column(7,
+        column(9,
         wellPanel(              
               h2("Projected Trends"),
                           
-                plotOutput("Emissions"),style="padding: 5px;", height="350px",
+                plotOutput("Emissions"),style="padding: 5px;", height="450px",
                     helpText("Projections of mean annual temperature and total annual precipitation",
                     "are produced using 1/8th degree BCSD data that was downloaded from the Green Data Oasis",
                     "heavy lines indicate mean by RCP. A 5-year rolling average smooth",
@@ -149,7 +144,7 @@ tabPanel("Historic Trends",
                   ),
               selected = 1),width=2),
        mainPanel(
-         column(6, 
+         column(9,
             wellPanel(
               h2("Historic trend plots"),
                checkboxInput("Trend", label = h6("Add Linear Trend"),
@@ -162,7 +157,7 @@ tabPanel("Historic Trends",
                    "rolling average and a linear models fit with 95% confdence interval")
              ),
             style="padding: 5px;"),
-           column(6,
+           column(9,
              wellPanel(
                 sliderInput("MonthBase", label = h2("Years to use for calculating monthly normals"),
                             min = 1895, max = 2010, value =c(1951,1980),sep="",width="100%"),    

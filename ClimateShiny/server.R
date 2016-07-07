@@ -161,7 +161,7 @@ shinyServer(function(input, output,session) {
          if(input$RibbonOrLine=="Ribbon") 
                 EmissionSDPlot(ds$GDOLst[[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ParkName=ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,
-                cexMult=1.2,writeMain=writeMain,Period=5)
+                cexMult=1.2,writeMain=writeMain,Period=5,Watermark=Watermark)
          if(input$RibbonOrLine=="Line")
                 EmissionLinePlot(ds$GDOLst[[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,cexMult=1.2,
@@ -174,7 +174,8 @@ shinyServer(function(input, output,session) {
        
              BoxplotRCP(InputDat=ds$GDOLst[[as.numeric(input$Var)]],BaseDat=PastLst[[as.numeric(input$Var)]],Baseline=c(1950,1980),
                 BarAvg=20,AllOnePlot=TRUE,Col=NA,DisplayOutput=TRUE,
-                OutputGraphics=OutputGraphics,cexMult=1.5,writeMain=TRUE,PlotBase=FALSE,RCP=input$RibbonRCP)
+                OutputGraphics=OutputGraphics,cexMult=1.5,writeMain=TRUE,PlotBase=FALSE,
+                RCP=input$RibbonRCP,Watermark=Watermark)
   })
  
 #==================================
@@ -194,7 +195,7 @@ shinyServer(function(input, output,session) {
        TminPlot<-YearlyLinePlot(PastLst,MovAvgPeriod=10,
                    Xlab=(""),
                    MovAvg=input$MovAvg,LM=input$Trend,maCol="blue",Main=input$NationalPark,
-                   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=writeMain)
+                   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=writeMain,Watermark=Watermark)
                
   })
  output$MonthlyLine<-renderPlot({ 
@@ -209,7 +210,7 @@ shinyServer(function(input, output,session) {
                                     }
 
       MonthlyLine(Observational=PastLst,Baseline=input$MonthBase,cexMult=1.6,plotLegend=TRUE,
-      PlotUnits=PlotUnits[ifelse(input$HistVar==4,2,1)])
+      PlotUnits=PlotUnits[ifelse(input$HistVar==4,2,1)],Watermark=Watermark)
                
   })
    

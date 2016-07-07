@@ -1,4 +1,6 @@
 load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\UnitedStates\\USProjectionMaps")
+#might be missing a library from the addCSCemblem
+
 
 #FormalBackgrounds branch of git
  setwd(file.path("C:\\GoogleDrive\\Climate","Rcode"))
@@ -9,17 +11,19 @@ load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\UnitedStates\\USProject
     "YearlyLinePlot.r","AnomalyPlot.r","ImagePlot.r",
     "PlotMappedDataClass.R","BatchClimateTs.r",
     "EmissionsQuant.r","EmissionsLinegg.r","MonthlyLine.r","CurvesColorForTime.r",
-    "MyBoxPlotByRCP.r","LMTable.r","ChangeTable.r",
+    "MyBoxPlotByRCP.r","LMTable.r","ChangeTable.r","changeAlpha.R",
     "dataClassesAndMethods.r","combineBCSD.r","GetIndicies.r","getTime.r","BioclimTs.r","SubsetTs.r",
     "my.filled.contour.r","my.image.plot.r","scatterMargins.r","scatterplotProgression.R","plotProgression.r","ElevationMap.r")
     unlist(lapply(sourceList,source))
+
 
 setwd("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp")
 sourceList<-list("ClimateShiny/external/ChkLibs.r","ClimateShiny/external/GetParkBoundary.r")
 unlist(lapply(sourceList,source))
 
 ChkLibs(list("maptools","rgdal","shiny","leaflet","maptools","rgdal","raster","ncdf4","fields","maps",
-            "ggplot2","zoo","XML","RColorBrewer","chron","gridExtra","plotrix"))
+            "ggplot2","zoo","XML","RColorBrewer","chron","gridExtra","plotrix","jpeg"))
 
-
+Watermark <- readJPEG("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp\\ClimateShiny\\www\\LogoFade.jpg")
 runApp("ClimateShiny")
+

@@ -1,12 +1,12 @@
-load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\UnitedStates\\USProjectionMaps")
-#might be missing a library from the addCSCemblem
+load("C:\\Users\\mtalbert\\Desktop\\Climate\\ParkOutput\\UnitedStates\\USProjectionMapsNew.Rdat")
 
+writeMain=TRUE
 
-#FormalBackgrounds branch of git
+#FormalBackgrounds or Watermark branch of git for climate graphics code
  setwd(file.path("C:\\GoogleDrive\\Climate","Rcode"))
     sourceList<-list("ChkLibs.r","InputConstants.r","ClipToPolygon.r",
     "MyPlotSetup.r","GenerateColors.r","Convert.R","GenerateLabel.r",
-    "GetParkBoundary.r","GetParkBox.r",
+    "GetParkBoundary.r","GetParkBox.r","dataClassesAndMethods.r",
     "LocalTSClassAndMethods.r","ClassesAndMethods.R",
     "YearlyLinePlot.r","AnomalyPlot.r","ImagePlot.r",
     "PlotMappedDataClass.R","BatchClimateTs.r",

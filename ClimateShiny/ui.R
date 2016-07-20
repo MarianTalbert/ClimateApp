@@ -2,7 +2,8 @@
 LatLst<-as.list(seq(from=29,to=50))
 LonLst<-as.list(seq(from=-125,to=-67))
 names(LatLst)<-seq(from=29,to=50) 
-names(LonLst)<-seq(from=-125,to=-67) 
+names(LonLst)<-seq(from=-125,to=-67)
+
 # Define UI for application that draws a histogram
 shinyUI(navbarPage("Climate Primer",
 #===============================================
@@ -13,12 +14,14 @@ shinyUI(navbarPage("Climate Primer",
     mainPanel(
        wellPanel(
                  fluidRow(
-#                  column(2,
-#                     selectInput("States", choices=StateLst,label=h4("Select State"))),
-#                     h2("or"),
                  column(5,
                    selectInput("NationalPark", choices=as.character(NpsLst),
                                label=h4("National Park"),selected="Adams")),
+                 radioButtons("MapUnits", label = h4("Plot Units"),
+                              choices = list("Metric (C/mm per month)" = 2,
+                                             "US units (F/ inches per month)" = 1), 
+                              selected=1
+                 ),
           style="padding: 5px;"),
        fluidRow(
          column(2,
@@ -51,10 +54,9 @@ shinyUI(navbarPage("Climate Primer",
    #  Projected Trends  
  tabPanel("Projected Trends",
      sidebarPanel(
-            radioButtons("PlotUnits", label = h4("Plot Units"),
-              choices = list("Metric (C/mm per month)" = "c(\"C\",\"mm\")",
-              "US units (F/ inches per month)" = "c(\"F\",\"In\")"
-                              )
+            radioButtons("ProjUnits", label = h4("Plot Units"),
+              choices = list("Metric (C/mm per month)" = 2,
+              "US units (F/ inches per month)" = 1), selected=1
                         ),
               radioButtons("Var", 
                     label = h3("Variable"), 
@@ -93,9 +95,8 @@ shinyUI(navbarPage("Climate Primer",
         ),
       mainPanel(
         column(9,
-        wellPanel(              
-              h2("Projected Trends"),
-                          
+        wellPanel(
+              h2(textOutput("projLab")),          
                 plotOutput("Emissions"),style="padding: 5px;", height="450px",
                     helpText("Projections of mean annual temperature and total annual precipitation",
                     "are produced using 1/8th degree BCSD data that was downloaded from the Green Data Oasis",
@@ -146,7 +147,7 @@ tabPanel("Historic Trends",
        mainPanel(
          column(9,
             wellPanel(
-              h2("Historic trend plots"),
+              h2(textOutput("histLab")),
                checkboxInput("Trend", label = h6("Add Linear Trend"),
                                    value = TRUE),
                   checkboxInput("MovAvg", label = h6("Add Moving Average"),
@@ -188,7 +189,7 @@ tabPanel("Anomaly Plots",
         mainPanel( 
              
              wellPanel(
-                   h2("Anomaly Plots"),
+                 h2(textOutput("anomalyLab")),
                    div(class="row",    
                     div(class="span5",       
                         div(class="span8",plotOutput("AnomalyPlot")),
@@ -231,7 +232,7 @@ tabPanel("Projection Scatterplot",
          ),
          
          mainPanel(
-                 h2("Scatterplots showing how models compare for the region of interest"),
+               h2(textOutput("scatterLab")),
                   plotOutput("ScatterPlot",width="850px",height="750px"),
                 fluidRow( column(6,sliderInput("ScatterBase", label = h4("Baseline Years"),
                   min = 1895, max = 2005, value =c(1951,1980),sep="",width="50%")),         

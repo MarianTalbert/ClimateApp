@@ -2,7 +2,7 @@
 # Define server logic required to draw a histogram
 shinyServer(function(input, output,session) {
   dat<-NA
-  #===== Available Shapefiles Update =======#
+  #===== Available Shapefiles Update ======F=#
   observe({
 		if(is.null(input$InputFile))
 			return()                                                             
@@ -23,6 +23,7 @@ shinyServer(function(input, output,session) {
       rangeIndx=1,
       Shape=NA
   )
+  
   Mapi=reactive({   
     switch(input$mapVar,
            Temperature = 1,
@@ -30,10 +31,21 @@ shinyServer(function(input, output,session) {
            Elevation =3)})
  
   MapLab=reactive({
-    switch(input$mapVar,
-           Temperature = "Average Annual Temperature (F)",
-           Precipitation = "Total Annual Precipitation (In/Yr)",
-           Elevation ="Elevation")})
+    VarLab <- switch(input$mapVar,
+           Temperature = "Average Annual Temperature",
+           Precipitation = "Total Annual Precipitation",
+           Elevation ="Elevation")
+    
+    unitLabs<-list()
+    unitLabs[[1]]<-c("(F)","(In/Yr)","(Feet)")
+    unitLabs[[2]]<-c("(C)","(mm/Yr)","(meters)")
+    unitIndx <- switch(input$mapVar,
+                      Temperature = 1,
+                      Precipitation = 2,
+                      Elevation =3)
+    unitLabs<-unitLabs[[as.numeric(input$MapUnits)]][[unitIndx]]
+    return(paste(VarLab,unitLabs))
+    })
   
   MapLst<-reactive({
     if(input$mapVar=="Temperature") return(ShinyMapLst[[1]])
@@ -41,32 +53,46 @@ shinyServer(function(input, output,session) {
     if(input$mapVar=="Elevation") return(ShinyMapLst[[3]])
   })
   MapPal=reactive({
-    
+    pal<-list()
     values$rangeIndx<-switch(input$mapVar,
                              Temperature = 1,
                              Precipitation = 2,
                              Elevation =3)
   
-    if(input$mapVar=="Temperature"& !input$diffFromHist)
-      pal = colorNumeric("OrRd", VarRng[[values$rangeIndx]],
+    if(input$mapVar=="Temperature"& !input$diffFromHist){
+      pal[[1]] = colorNumeric("OrRd", VarRange[[1]][[values$rangeIndx]],
                          na.color = "transparent")
+      pal[[2]] = colorNumeric("OrRd", VarRange[[2]][[values$rangeIndx]],
+                              na.color = "transparent")
+      
+    }
     if(input$mapVar=="Temperature"& input$diffFromHist){
       values$rangeIndx<-5
-
-      pal = colorNumeric("YlOrRd", VarRng[[values$rangeIndx]],
+      pal[[1]] = colorNumeric("YlOrRd", VarRange[[1]][[values$rangeIndx]],
                          na.color = "transparent")
+      pal[[2]] = colorNumeric("YlOrRd", VarRange[[2]][[values$rangeIndx]],
+                              na.color = "transparent")
     }
-    if(input$mapVar=="Precipitation" & !input$diffFromHist)
-      pal = colorNumeric("BuGn", VarRng[[values$rangeIndx]],
+    if(input$mapVar=="Precipitation" & !input$diffFromHist){
+      pal[[1]] = colorNumeric("BuGn", VarRange[[1]][[values$rangeIndx]],
                          na.color = "transparent")
+      pal[[2]] = colorNumeric("BuGn", VarRange[[2]][[values$rangeIndx]],
+                              na.color = "transparent")
+    }
     if(input$mapVar=="Precipitation" & input$diffFromHist){
       values$rangeIndx<-4
-      pal = colorNumeric("BrBG", VarRng[[values$rangeIndx]],
+      pal[[1]] = colorNumeric("BrBG", VarRange[[1]][[values$rangeIndx]],
                          na.color = "transparent")
+      pal[[2]] = colorNumeric("BrBG", VarRange[[2]][[values$rangeIndx]],
+                              na.color = "transparent")
   }
-    if(input$mapVar=="Elevation") 
-  pal = colorNumeric(terrain.colors(10), VarRng[[values$rangeIndx]],
+    if(input$mapVar=="Elevation"){ 
+      pal[[1]] = colorNumeric(terrain.colors(10), VarRange[[1]][[values$rangeIndx]],
                      na.color = "transparent")
+      pal[[2]] = colorNumeric(terrain.colors(10), VarRange[[2]][[values$rangeIndx]],
+                              na.color = "transparent")
+  
+    }
     return(pal)
   })
   output$Map <- renderLeaflet({
@@ -76,6 +102,7 @@ shinyServer(function(input, output,session) {
                        "1990s"=1,
                        "2040s"=2,
                        "2080s"=3)
+    Units<-as.numeric(input$MapUnits)
     if(input$mapVar=="Elevation") TimePeriod<-1
     RcpChoice<-1
     if(TimePeriod!=1){
@@ -85,7 +112,6 @@ shinyServer(function(input, output,session) {
     diffMap<-input$diffFromHist
     dataset <- MapLst()
     Title<-MapLab()
-    #colRange<-VarRng[[Mapi]]
     
     if(!inherits(dataset,"list")){ 
       #for elevation the options are a bit more limted
@@ -95,7 +121,7 @@ shinyServer(function(input, output,session) {
     }
     
     if(TimePeriod!=1 & diffMap){
-      if(Title=="Total Annual Precipitation"){
+      if(input$mapVar=="Precipitation"){
       dataset[[TimePeriod]][[RcpChoice]]<-
          100*(dataset[[TimePeriod]][[RcpChoice]]-dataset[[1]][[1]])/dataset[[1]][[1]]
       Title<-"Percent Change in Precipitation"
@@ -110,9 +136,11 @@ shinyServer(function(input, output,session) {
       }
     }
 
-    MyMap<-leaflet() %>% addTiles() %>%  addRasterImage(dataset[[TimePeriod]][[RcpChoice]], colors = MapPal(), 
-                    opacity = input$mapTrans) %>%
-      addLegend(pal = MapPal(), values = VarRng[[values$rangeIndx]],title=Title)
+    pal<-MapPal()
+    MyMap<-leaflet() %>% addTiles() %>%  addRasterImage(dataset[[TimePeriod]][[RcpChoice]], 
+                                                        colors = pal[[1]], 
+                                                        opacity = input$mapTrans) %>%
+      addLegend(pal =pal[[Units]], values = VarRange[[Units]][[values$rangeIndx]],title=Title)
          #I believe this can be simplified now
          #browser()
          Code<-NpsLst[which(input$NationalPark== NpsLst,arr.ind=TRUE)]
@@ -149,7 +177,30 @@ shinyServer(function(input, output,session) {
      ds$ParkName<-NpsLst[ind]
     
 		})
-
+  output$projLab<-renderText({
+      paste("Model Projections for",input$NationalPark)
+    })
+  output$histLab<-renderText({
+    paste("Historic trends for",input$NationalPark)
+  })
+  output$anomalyLab<-renderText({
+    paste("Anomaly plots for",input$NationalPark)
+  })
+  output$scatterLab<-renderText({
+    paste("Scatterplot for",input$NationalPark)
+  })
+ 
+  #updateRadioButtons(session, "inRadio",
+  #                   label =h4("Plot Units"),
+   #                  choices = list("Metric (C/mm per month)" = 2,
+   #                                 "US units (F/ inches per month)" = 1),
+    #                 selected = input$MapUnits)
+  #)
+  radioButtons("ProjUnits", label = h4("Plot Units"),
+               choices = list("Metric (C/mm per month)" = 2,
+                              "US units (F/ inches per month)" = 1), selected=1
+  )
+  
  
 #====== Once an Attribute value is selected  add it to the map   
 
@@ -161,11 +212,11 @@ shinyServer(function(input, output,session) {
          if(input$RibbonOrLine=="Ribbon") 
                 EmissionSDPlot(ds$GDOLst[[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ParkName=ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,
-                cexMult=1.2,writeMain=writeMain,Period=5,Watermark=Watermark)
+                cexMult=1.2,writeMain=FALSE,Period=5,Watermark=Watermark)
          if(input$RibbonOrLine=="Line")
                 EmissionLinePlot(ds$GDOLst[[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,cexMult=1.2,
-                writeMain=writeMain,Period=5)
+                writeMain=FALSE,Period=5)
            })
         output$ProjBoxplot<-renderPlot({
         if(input$ObsRibbon=="Prism") PastLst<-ds$PrismLst
@@ -195,7 +246,7 @@ shinyServer(function(input, output,session) {
        TminPlot<-YearlyLinePlot(PastLst,MovAvgPeriod=10,
                    Xlab=(""),
                    MovAvg=input$MovAvg,LM=input$Trend,maCol="blue",Main=input$NationalPark,
-                   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=writeMain,Watermark=Watermark)
+                   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=FALSE,Watermark=Watermark)
                
   })
  output$MonthlyLine<-renderPlot({ 
@@ -221,7 +272,7 @@ shinyServer(function(input, output,session) {
     
   
   AnomalyPlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,ParkName=ds$ParkName,
-   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=2,writeMain=writeMain)
+   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=2,writeMain=FALSE)
    })
    
    output$ScatterPlot<-renderPlot({ 
@@ -229,7 +280,7 @@ shinyServer(function(input, output,session) {
      scatterMargins(ds$GDOLst$Tavg,ds$GDOLst$ppt,Baseline=input$ScatterBase,rcp=input$ScatterRCP,
                     PlotTime=input$ScatterProj,
                     DisplayOutput=TRUE,OutputGraphics=OutputGraphics,
-                    cexMult=1.3,writeMain=TRUE,addLegend=TRUE,Text=input$ScatterText,
+                    cexMult=1.3,writeMain=FALSE,addLegend=TRUE,Text=input$ScatterText,
                     PlotMargins=input$ScatterMars)
           })
     
@@ -239,7 +290,8 @@ shinyServer(function(input, output,session) {
        if(input$AnomalyHist=="Maurer") PastLst<-ds$MaurerLst
        if(input$AnomalyHist=="TopoWx") PastLst<-ds$TopoWxLst
        
-        ImagePlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=2.1,writeMain=writeMain)
+        ImagePlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,
+                  cexMult=2.1,writeMain=FALSE)
        })
       
       output$Maps<-renderPlot({

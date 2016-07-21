@@ -22,8 +22,8 @@ sourceList<-list("ClimateShiny/external/ChkLibs.r","ClimateShiny/external/GetPar
 unlist(lapply(sourceList,source))
 
 ChkLibs(list("maptools","rgdal","shiny","leaflet","maptools","rgdal","raster","ncdf4","fields","maps",
-            "ggplot2","zoo","XML","RColorBrewer","chron","gridExtra","plotrix","jpeg"))
+            "ggplot2","zoo","XML","RColorBrewer","chron","gridExtra","plotrix","jpeg","Cairo"))
 
 Watermark <- readJPEG("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp\\ClimateShiny\\www\\LogoFade.jpg")
 runApp("ClimateShiny")
-
+#runApp("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\Examples\\shiny-examples-master\\shiny-examples-master\\015-layout-navbar")

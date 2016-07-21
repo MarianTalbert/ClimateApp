@@ -128,6 +128,10 @@ shinyUI(navbarPage("Climate Primer",
 tabPanel("Historic Trends",
     
        sidebarPanel(
+         radioButtons("HistUnits", label = h4("Plot Units"),
+                      choices = list("Metric (C/mm per month)" = 2,
+                                     "US units (F/ inches per month)" = 1), selected=1
+         ),
               radioButtons("ObsHist", 
                         label = h4("Observational Data"), 
                         choices = list("Maurer" = "Maurer", 
@@ -171,6 +175,10 @@ tabPanel("Historic Trends",
  ),
 tabPanel("Anomaly Plots",
        sidebarPanel(
+         radioButtons("AnomUnits", label = h4("Plot Units"),
+                      choices = list("Metric (C/mm per month)" = 2,
+                                     "US units (F/ inches per month)" = 1), selected=1
+           ),
               radioButtons("AnomalyHist", 
                         label = h4("Observational Data"), 
                         choices = list("Maurer" = "Maurer", 
@@ -216,6 +224,10 @@ tabPanel("Anomaly Plots",
 # ==========  Model Scatterplot Tab ==========#    
 tabPanel("Projection Scatterplot",
          sidebarPanel(
+           radioButtons("ScatterUnits", label = h4("Plot Units"),
+                        choices = list("Metric (C/mm per month)" = 2,
+                                       "US units (F/ inches per month)" = 1), selected=1
+           ),
            checkboxGroupInput("ScatterRCP", 
            label = h4("RCPs for Plotting"), 
            choices = list("RCP 2.6" = "RCP 2.6", 

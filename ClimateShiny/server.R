@@ -160,20 +160,33 @@ shinyServer(function(input, output,session) {
   
   #===== Select Attribute Update =======#		
   ds <- reactiveValues(
-    MaurerLst=NA,
-    PrismLst=NA,
-    TopoWxLst=NA,
-    GDOLst=NA,
+    MaurerLst=list(),
+    PrismLst=list(),
+    TopoWxLst=list(),
+    GDOLst=list(),
     ParkName=NA
   )
   observe({
      ind<-which(input$NationalPark==NpsLst,arr.ind=TRUE)
      path<-file.path(WorkspacePath,NpsCodes[ind],"StudyWorkspace")
      load(path)
-     ds$MaurerLst<-MaurerLst
-     ds$PrismLst<-PrismLst
-     ds$GDOLst<-GDOLst
-     ds$TopoWxLst<-TopoWxLst
+  
+     ds$MaurerLst[[2]]<-MaurerLst
+     ds$MaurerLst[[1]]<-mapply(ConvertTS,x=MaurerLst,
+                               FromUnits=c("C","C","C","MM"),
+                               ToUnits=c("F","F","F","IN"))
+     ds$PrismLst[[2]]<-PrismLst
+     ds$PrismLst[[1]]<-mapply(ConvertTS,x=PrismLst,
+                              FromUnits=c("C","C","C","MM"),
+                              ToUnits=c("F","F","F","IN"))
+     ds$GDOLst[[2]]<-GDOLst
+     ds$GDOLst[[1]]<-mapply(ConvertTS,x=GDOLst,
+                            FromUnits=c("C","C","C","MM"),
+                            ToUnits=c("F","F","F","IN"))
+     ds$TopoWxLst[[2]]<-TopoWxLst
+     ds$TopoWxLst[[1]]<-mapply(ConvertTS,x=TopoWxLst,
+                            FromUnits=c("C","C","C","MM"),
+                            ToUnits=c("F","F","F","IN"))
      ds$ParkName<-NpsLst[ind]
     
 		})
@@ -190,40 +203,29 @@ shinyServer(function(input, output,session) {
     paste("Scatterplot for",input$NationalPark)
   })
  
-  #updateRadioButtons(session, "inRadio",
-  #                   label =h4("Plot Units"),
-   #                  choices = list("Metric (C/mm per month)" = 2,
-   #                                 "US units (F/ inches per month)" = 1),
-    #                 selected = input$MapUnits)
-  #)
-  radioButtons("ProjUnits", label = h4("Plot Units"),
-               choices = list("Metric (C/mm per month)" = 2,
-                              "US units (F/ inches per month)" = 1), selected=1
-  )
-  
  
 #====== Once an Attribute value is selected  add it to the map   
 
          output$Emissions<-renderPlot({
-        if(input$ObsRibbon=="Prism") PastLst<-ds$PrismLst 
-        if(input$ObsRibbon=="Maurer") PastLst<-ds$MaurerLst
-        if(input$ObsRibbon=="TopoWx") PastLst<-ds$TopoWxLst
-        
+        indx<-as.numeric(input$ProjUnits)
+        if(input$ObsRibbon=="Prism") PastLst<-ds$PrismLst[[indx]] 
+        if(input$ObsRibbon=="Maurer") PastLst<-ds$MaurerLst[[indx]]
+        if(input$ObsRibbon=="TopoWx") PastLst<-ds$TopoWxLst[[indx]]
          if(input$RibbonOrLine=="Ribbon") 
-                EmissionSDPlot(ds$GDOLst[[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
+                EmissionSDPlot(ds$GDOLst[[indx]][[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ParkName=ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,
                 cexMult=1.2,writeMain=FALSE,Period=5,Watermark=Watermark)
          if(input$RibbonOrLine=="Line")
-                EmissionLinePlot(ds$GDOLst[[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
+                EmissionLinePlot(ds$GDOLst[[indx]][[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,cexMult=1.2,
                 writeMain=FALSE,Period=5)
            })
         output$ProjBoxplot<-renderPlot({
-        if(input$ObsRibbon=="Prism") PastLst<-ds$PrismLst
-        if(input$ObsRibbon=="Maurer") PastLst<-ds$MaurerLst
-        if(input$ObsRibbon=="TopoWx") PastLst<-ds$TopoWxLst
-       
-             BoxplotRCP(InputDat=ds$GDOLst[[as.numeric(input$Var)]],BaseDat=PastLst[[as.numeric(input$Var)]],Baseline=c(1950,1980),
+          indx<-as.numeric(input$ProjUnits)
+        if(input$ObsRibbon=="Prism") PastLst<-ds$PrismLst[[indx]]
+        if(input$ObsRibbon=="Maurer") PastLst<-ds$MaurerLst[[indx]]
+        if(input$ObsRibbon=="TopoWx") PastLst<-ds$TopoWxLst[[indx]]
+             BoxplotRCP(InputDat=ds$GDOLst[[indx]][[as.numeric(input$Var)]],BaseDat=PastLst[[as.numeric(input$Var)]],Baseline=c(1950,1980),
                 BarAvg=20,AllOnePlot=TRUE,Col=NA,DisplayOutput=TRUE,
                 OutputGraphics=OutputGraphics,cexMult=1.5,writeMain=TRUE,PlotBase=FALSE,
                 RCP=input$RibbonRCP,Watermark=Watermark)
@@ -232,13 +234,14 @@ shinyServer(function(input, output,session) {
 #==================================
 #==== Historic Trends plots  
   output$HistoricTrends<-renderPlot({ 
-       if(input$ObsHist=="Prism") PastLst<-list(PRISM=ds$PrismLst[[as.numeric(input$HistVar)]])
-       if(input$ObsHist=="Maurer") PastLst<-list(Maurer=ds$MaurerLst[[as.numeric(input$HistVar)]])
-       if(input$ObsHist=="TopoWx") PastLst<-list(TopoWx=ds$TopoWxLst[[as.numeric(input$HistVar)]])
+       indx<-as.numeric(input$HistUnits)
+       if(input$ObsHist=="Prism") PastLst<-list(PRISM=ds$PrismLst[[indx]][[as.numeric(input$HistVar)]])
+       if(input$ObsHist=="Maurer") PastLst<-list(Maurer=ds$MaurerLst[[indx]][[as.numeric(input$HistVar)]])
+       if(input$ObsHist=="TopoWx") PastLst<-list(TopoWx=ds$TopoWxLst[[indx]][[as.numeric(input$HistVar)]])
        if(input$ObsHist=="CompareHist"){
-             PastLst=list(PRISM=ds$PrismLst[[as.numeric(input$HistVar)]],
-                    Maurer=ds$MaurerLst[[as.numeric(input$HistVar)]],
-                    TopoWx=ds$TopoWxLst[[as.numeric(input$HistVar)]])
+             PastLst=list(PRISM=ds$PrismLst[[2]][[as.numeric(input$HistVar)]],
+                    Maurer=ds$MaurerLst[[2]][[as.numeric(input$HistVar)]],
+                    TopoWx=ds$TopoWxLst[[2]][[as.numeric(input$HistVar)]])
                         
                     if(as.numeric(input$HistVar)==4) PastLst<-PastLst[1:2] #no TopoWx for Preci 
                                     }
@@ -250,25 +253,28 @@ shinyServer(function(input, output,session) {
                
   })
  output$MonthlyLine<-renderPlot({ 
-       if(input$ObsHist=="Prism") PastLst<-list(PRISM=ds$PrismLst[[as.numeric(input$HistVar)]])
-       if(input$ObsHist=="Maurer") PastLst<-list(Maurer=ds$MaurerLst[[as.numeric(input$HistVar)]])
-       if(input$ObsHist=="TopoWx") PastLst<-list(TopoWx=ds$TopoWxLst[[as.numeric(input$HistVar)]])
+   indx<-as.numeric(input$HistUnits)
+       if(input$ObsHist=="Prism") PastLst<-list(PRISM=ds$PrismLst[[indx]][[as.numeric(input$HistVar)]])
+       if(input$ObsHist=="Maurer") PastLst<-list(Maurer=ds$MaurerLst[[indx]][[as.numeric(input$HistVar)]])
+       if(input$ObsHist=="TopoWx") PastLst<-list(TopoWx=ds$TopoWxLst[[indx]][[as.numeric(input$HistVar)]])
        if(input$ObsHist=="CompareHist"){
-             PastLst=list(PRISM=ds$PrismLst[[as.numeric(input$HistVar)]],
-                    Maurer=ds$MaurerLst[[as.numeric(input$HistVar)]],
-                    TopoWx=ds$TopoWxLst[[as.numeric(input$HistVar)]])
+             PastLst=list(PRISM=ds$PrismLst[[indx]][[as.numeric(input$HistVar)]],
+                    Maurer=ds$MaurerLst[[indx]][[as.numeric(input$HistVar)]],
+                    TopoWx=ds$TopoWxLst[[indx]][[as.numeric(input$HistVar)]])
                      if(as.numeric(input$HistVar)==4) PastLst<-PastLst[1:2] #no TopoWx for Precip     
                                     }
 
       MonthlyLine(Observational=PastLst,Baseline=input$MonthBase,cexMult=1.6,plotLegend=TRUE,
-      PlotUnits=PlotUnits[ifelse(input$HistVar==4,2,1)],Watermark=Watermark)
+      Watermark=Watermark)
                
   })
    
   output$AnomalyPlot<-renderPlot({
-     if(input$AnomalyHist=="Prism") PastLst<-ds$PrismLst
-       if(input$AnomalyHist=="Maurer") PastLst<-ds$MaurerLst
-       if(input$AnomalyHist=="TopoWx") PastLst<-ds$TopoWxLst
+   
+    indx<-as.numeric(input$AnomUnits)
+       if(input$AnomalyHist=="Prism") PastLst<-ds$PrismLst[[indx]]
+       if(input$AnomalyHist=="Maurer") PastLst<-ds$MaurerLst[[indx]]
+       if(input$AnomalyHist=="TopoWx") PastLst<-ds$TopoWxLst[[indx]]
     
   
   AnomalyPlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,ParkName=ds$ParkName,
@@ -276,8 +282,8 @@ shinyServer(function(input, output,session) {
    })
    
    output$ScatterPlot<-renderPlot({ 
-     
-     scatterMargins(ds$GDOLst$Tavg,ds$GDOLst$ppt,Baseline=input$ScatterBase,rcp=input$ScatterRCP,
+     indx<-as.numeric(input$ScatterUnits)
+     scatterMargins(ds$GDOLst[[indx]]$Tavg,ds$GDOLst[[indx]]$ppt,Baseline=input$ScatterBase,rcp=input$ScatterRCP,
                     PlotTime=input$ScatterProj,
                     DisplayOutput=TRUE,OutputGraphics=OutputGraphics,
                     cexMult=1.3,writeMain=FALSE,addLegend=TRUE,Text=input$ScatterText,
@@ -285,10 +291,11 @@ shinyServer(function(input, output,session) {
           })
     
     
-      output$ImagePlot<-renderPlot({ 
-       if(input$AnomalyHist=="Prism") PastLst<-ds$PrismLst
-       if(input$AnomalyHist=="Maurer") PastLst<-ds$MaurerLst
-       if(input$AnomalyHist=="TopoWx") PastLst<-ds$TopoWxLst
+      output$ImagePlot<-renderPlot({
+        indx<-as.numeric(input$AnomUnits)
+       if(input$AnomalyHist=="Prism") PastLst<-ds$PrismLst[[indx]]
+       if(input$AnomalyHist=="Maurer") PastLst<-ds$MaurerLst[[indx]]
+       if(input$AnomalyHist=="TopoWx") PastLst<-ds$TopoWxLst[[indx]]
        
         ImagePlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,
                   cexMult=2.1,writeMain=FALSE)

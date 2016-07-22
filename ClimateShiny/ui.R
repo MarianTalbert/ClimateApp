@@ -42,10 +42,10 @@ shinyUI(navbarPage("Climate Primer",
                      value = FALSE))
        ),
          
-       leafletOutput("Map"),
+       leafletOutput("Map",width="100%"),
          img(src="NCCSClogo.jpg",height=150,width=220)
               
-    ) #end well panel
+    ),width=12 
    
         
     )
@@ -94,34 +94,44 @@ shinyUI(navbarPage("Climate Primer",
         
         ),
       mainPanel(
-        column(9,
-        wellPanel(
-              h2(textOutput("projLab")),          
-                plotOutput("Emissions"),style="padding: 5px;", height="450px",
+        h2(textOutput("projLab")), 
+        
+          column(10,
+              wellPanel(   
+                plotOutput("Emissions",width="100%"),
+              style="padding: 5px;")), 
+          column(2,
+                 wellPanel(
                     helpText("Projections of mean annual temperature and total annual precipitation",
                     "are produced using 1/8th degree BCSD data that was downloaded from the Green Data Oasis",
                     "heavy lines indicate mean by RCP. A 5-year rolling average smooth",
                     "is applied to obserational data before plotting.",
-                    "The limits of the Ribbon represent the 5% and 95% quantiles for all models within a given RCP")
-                    
-         ),
-        style="padding: 5px;"),
-        column(9, 
-        wellPanel(           
-                h2("Projected Trends by Season"),
-                plotOutput("ProjBoxplot"),style="padding: 5px;", height="350px",
+                    "The limits of the Ribbon represent the 5%",
+                    "and 95% quantiles for all models within a given RCP")
+                    ),
+                    style="padding: 5px;"), 
+         #),
+        #style="padding: 5px;"),
+        #column(9, 
+        
+          column(10,
+                 wellPanel(
+                   plotOutput("ProjBoxplot",width="100%")
+                   ),
+                   style="padding: 5px;"),
+          column(2,
+                 wellPanel(
                    helpText("Seasonal Box plots are produced using the",
                    "1/8th degree BCSD data from the GDO.",
                    " Each box is created by calculating ",
                    "the seasonal mean (or total for precipitation) for each run and available model",
                    "within a 20 year period for the given RCP. The boxes represent the 25% to",
                    "75% quantiles and the whiskers extend out to 1.5*IQR (Inter-quantile range).")
-                
-        ),
-        style="padding: 5px;")       
+                 ),
+                 style="padding: 5px;"       
+          ),width=10
                  
-        )
-      ),
+      )),
    
 #====================================================
 #======= Historic Trends    
@@ -139,7 +149,7 @@ tabPanel("Historic Trends",
                            "TopoWx"="TopoWx",
                            "Compare"="CompareHist"
                            ),
-                        selected = "Maurer"),
+                        selected = "CompareHist"),
                radioButtons("HistVar", 
                     label = h3("Variable"), 
                     choices = list("Max Temp" = 1, 
@@ -149,28 +159,40 @@ tabPanel("Historic Trends",
                   ),
               selected = 1),width=2),
        mainPanel(
-         column(9,
-            wellPanel(
-              h2(textOutput("histLab")),
-               checkboxInput("Trend", label = h6("Add Linear Trend"),
-                                   value = TRUE),
-                  checkboxInput("MovAvg", label = h6("Add Moving Average"),
-                                   value = TRUE),                                         
-                plotOutput("HistoricTrends"),
-                helpText("Annual historic line plot for average annual Temperature",
+         h2(textOutput("histLab")),
+         column(10,
+                wellPanel(
+                   plotOutput("HistoricTrends")
+                )
+           ),
+         column(2,
+                wellPanel(
+                 helpText("Annual historic line plot for average annual Temperature",
                    "and total precipitation. Options are available to add a 10 year",
-                   "rolling average and a linear models fit with 95% confdence interval")
-             ),
-            style="padding: 5px;"),
-           column(9,
-             wellPanel(
-                sliderInput("MonthBase", label = h2("Years to use for calculating monthly normals"),
-                            min = 1895, max = 2010, value =c(1951,1980),sep="",width="100%"),    
-                plotOutput("MonthlyLine"),
+                   "rolling average and a linear models fit with 95% confdence interval"),
+                 checkboxInput("Trend", label = h6("Add Linear Trend"),
+                               value =FALSE),
+                 checkboxInput("MovAvg", label = h6("Add Moving Average"),
+                               value = TRUE)
+                )
+         ),
+          
+           
+            
+               column(10,
+                 wellPanel(      
+                  plotOutput("MonthlyLine"),
+                  sliderInput("MonthBase", label = h3("Years to use for calculating monthly normals"),
+                              min = 1895, max = 2010, value =c(1951,1980),sep="",width="100%")
+                )),
+               column(2,
+                wellPanel(
                 helpText("Monthly normals are the monthly mean (or total for precipitatoin)",
                         "of the time series calculated over the specified set of years")
+               )
              ),
-             style="padding: 5px;")
+             
+         width=10
         )
  ),
 tabPanel("Anomaly Plots",
@@ -195,28 +217,31 @@ tabPanel("Anomaly Plots",
                   ),
               selected = 1),width=2),
         mainPanel( 
-             
-             wellPanel(
                  h2(textOutput("anomalyLab")),
-                   div(class="row",    
-                    div(class="span5",       
-                        div(class="span8",plotOutput("AnomalyPlot")),
-                        div(class="span8",helpText("The yearly anomaly plot shows",
+                 column(10,
+                   wellPanel( 
+                        plotOutput("AnomalyPlot"))),
+                 column(2,
+                    wellPanel( 
+                        helpText("The yearly anomaly plot shows",
                          "depicts the quantity of interest relative to the mean",
-                         "over the selected baseline period.")),
-                        div(class="span8",plotOutput("ImagePlot")),
-                        div(class="span8",helpText("The image plot shows the normalized",
+                         "over the selected baseline period."))),
+                 column(10,
+                        wellPanel( 
+                        plotOutput("ImagePlot"),
+                        sliderInput("Baseline", label = h4("Baseline Years"),
+                                    min = 1895, max = 2010, value =c(1895,1980),
+                                    sep="",width="100%"))),
+                 column(2,
+                        wellPanel( 
+                        helpText("The image plot shows the normalized",
                          "difference from a baseline period for each month",
                          "and year.  The baseline is calculated monthly within",
                          "the specified year range.  They pixels are normalized ",
                          "by month and colors range from + or - 2.5 Standard ",
-                         "deviations from the mean of the baseline period.")),
-                    sliderInput("Baseline", label = h4("Baseline Years"),
-                            min = 1895, max = 2010, value =c(1895,1980),sep="",width="100%"))
-                      
-               ))
-
-               
+                         "deviations from the mean of the baseline period."))),
+                
+             width=10
         )
 ),    
 
@@ -245,7 +270,7 @@ tabPanel("Projection Scatterplot",
          
          mainPanel(
                h2(textOutput("scatterLab")),
-                  plotOutput("ScatterPlot",width="850px",height="750px"),
+                  plotOutput("ScatterPlot",width="950px",height="850px"),
                 fluidRow( column(6,sliderInput("ScatterBase", label = h4("Baseline Years"),
                   min = 1895, max = 2005, value =c(1951,1980),sep="",width="50%")),         
                         column(6,

@@ -1,8 +1,8 @@
 
-# Define server logic required to draw a histogram
+
 shinyServer(function(input, output,session) {
   dat<-NA
-  #===== Available Shapefiles Update ======F=#
+  #===== Available Shapefiles Update ======#
   observe({
 		if(is.null(input$InputFile))
 			return()                                                             
@@ -214,7 +214,7 @@ shinyServer(function(input, output,session) {
          if(input$RibbonOrLine=="Ribbon") 
                 EmissionSDPlot(ds$GDOLst[[indx]][[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ParkName=ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,
-                cexMult=1.2,writeMain=FALSE,Period=5,Watermark=Watermark)
+                cexMult=1.2,writeMain=FALSE,Period=5)
          if(input$RibbonOrLine=="Line")
                 EmissionLinePlot(ds$GDOLst[[indx]][[as.numeric(input$Var)]],PastClim=PastLst[[as.numeric(input$Var)]],
                 ds$ParkName,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,rcp=input$RibbonRCP,cexMult=1.2,
@@ -228,7 +228,7 @@ shinyServer(function(input, output,session) {
              BoxplotRCP(InputDat=ds$GDOLst[[indx]][[as.numeric(input$Var)]],BaseDat=PastLst[[as.numeric(input$Var)]],Baseline=c(1950,1980),
                 BarAvg=20,AllOnePlot=TRUE,Col=NA,DisplayOutput=TRUE,
                 OutputGraphics=OutputGraphics,cexMult=1.5,writeMain=TRUE,PlotBase=FALSE,
-                RCP=input$RibbonRCP,Watermark=Watermark)
+                RCP=input$RibbonRCP)
   })
  
 #==================================
@@ -239,9 +239,9 @@ shinyServer(function(input, output,session) {
        if(input$ObsHist=="Maurer") PastLst<-list(Maurer=ds$MaurerLst[[indx]][[as.numeric(input$HistVar)]])
        if(input$ObsHist=="TopoWx") PastLst<-list(TopoWx=ds$TopoWxLst[[indx]][[as.numeric(input$HistVar)]])
        if(input$ObsHist=="CompareHist"){
-             PastLst=list(PRISM=ds$PrismLst[[2]][[as.numeric(input$HistVar)]],
-                    Maurer=ds$MaurerLst[[2]][[as.numeric(input$HistVar)]],
-                    TopoWx=ds$TopoWxLst[[2]][[as.numeric(input$HistVar)]])
+             PastLst=list(PRISM=ds$PrismLst[[indx]][[as.numeric(input$HistVar)]],
+                    Maurer=ds$MaurerLst[[indx]][[as.numeric(input$HistVar)]],
+                    TopoWx=ds$TopoWxLst[[indx]][[as.numeric(input$HistVar)]])
                         
                     if(as.numeric(input$HistVar)==4) PastLst<-PastLst[1:2] #no TopoWx for Preci 
                                     }
@@ -249,7 +249,7 @@ shinyServer(function(input, output,session) {
        TminPlot<-YearlyLinePlot(PastLst,MovAvgPeriod=10,
                    Xlab=(""),
                    MovAvg=input$MovAvg,LM=input$Trend,maCol="blue",Main=input$NationalPark,
-                   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=FALSE,Watermark=Watermark)
+                   DisplayOutput=TRUE,OutputGraphics=OutputGraphics,cexMult=1.6,writeMain=FALSE)
                
   })
  output$MonthlyLine<-renderPlot({ 
@@ -264,8 +264,7 @@ shinyServer(function(input, output,session) {
                      if(as.numeric(input$HistVar)==4) PastLst<-PastLst[1:2] #no TopoWx for Precip     
                                     }
 
-      MonthlyLine(Observational=PastLst,Baseline=input$MonthBase,cexMult=1.6,plotLegend=TRUE,
-      Watermark=Watermark)
+      MonthlyLine(Observational=PastLst,Baseline=input$MonthBase,cexMult=1.6,plotLegend=TRUE)
                
   })
    
@@ -300,11 +299,5 @@ shinyServer(function(input, output,session) {
         ImagePlot(PastLst[[as.numeric(input$AnomalyVar)]],Baseline=input$Baseline,DisplayOutput=TRUE,OutputGraphics=OutputGraphics,
                   cexMult=2.1,writeMain=FALSE)
        })
-      
-      output$Maps<-renderPlot({
-        plotProgression(BaseLst,Xlen,ylen,variable=as.numeric(input$mapVar),DisplayOutput=TRUE,
-                        OutputGraphics,Boundary,PlotBound,PlotState,PlotUnits)
-        
-      })
-   
+
 })   

@@ -17,10 +17,16 @@ shinyUI(navbarPage("Climate Primer",
                  column(5,
                    selectInput("NationalPark", choices=as.character(NpsLst),
                                label=h4("National Park"),selected="Adams")),
-                 radioButtons("MapUnits", label = h4("Plot Units"),
+                 column(2,radioButtons("MapUnits", label = h4("Plot Units"),
                               choices = list("Metric (C/mm per month)" = 2,
                                              "US units (F/ inches per month)" = 1), 
                               selected=1
+                 )),
+                 column(4),
+                 column(1,
+                        img(src="NCCSClogo.jpg",height=68,width=100),
+                        helpText(" "),
+                        img(src="USGSLogo.png",height=40,width=100)
                  ),
           style="padding: 5px;"),
        fluidRow(
@@ -42,8 +48,7 @@ shinyUI(navbarPage("Climate Primer",
                      value = FALSE))
        ),
          
-       leafletOutput("Map",width="100%"),
-         img(src="NCCSClogo.jpg",height=150,width=220)
+       leafletOutput("Map",width="100%",height="600px")
               
     ),width=12 
    
@@ -88,7 +93,11 @@ shinyUI(navbarPage("Climate Primer",
                       choices = list("Ribbon" = "Ribbon", 
                                      "Line" = "Line"
                       ),
-                      selected = "Ribbon"), 
+                      selected = "Ribbon"),
+           img(src="NCCSClogo.jpg",height=68,width=100),
+           helpText(" "),
+           img(src="USGSLogo.png",height=40,width=100),
+         
          width=2
               
         
@@ -157,7 +166,11 @@ tabPanel("Historic Trends",
                  "Avg Temp" = 3,
                  "Precip" = 4
                   ),
-              selected = 1),width=2),
+              selected = 1),
+             img(src="NCCSClogo.jpg",height=68,width=100),
+             helpText(" "),
+             img(src="USGSLogo.png",height=40,width=100),
+         width=2),
        mainPanel(
          h2(textOutput("histLab")),
          column(10,
@@ -215,7 +228,11 @@ tabPanel("Anomaly Plots",
                  "Avg Temp" = 3,
                  "Precip" = 4
                   ),
-              selected = 1),width=2),
+              selected = 1),
+             img(src="NCCSClogo.jpg",height=68,width=100),
+             helpText(" "),
+             img(src="USGSLogo.png",height=40,width=100),
+         width=2),
         mainPanel( 
                  h2(textOutput("anomalyLab")),
                  column(10,
@@ -264,6 +281,9 @@ tabPanel("Projection Scatterplot",
                          value = TRUE),
            checkboxInput("ScatterText", label = h6("Use model names rather than numbers"),
                          value = TRUE),
+           img(src="NCCSClogo.jpg",height=68,width=100),
+           helpText(" "),
+           img(src="USGSLogo.png",height=40,width=100),
            
            width=2
          ),

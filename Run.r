@@ -16,14 +16,9 @@ writeMain=TRUE
     "my.filled.contour.r","my.image.plot.r","scatterMargins.r","scatterplotProgression.R","plotProgression.r","ElevationMap.r")
     unlist(lapply(sourceList,source))
 
-
-setwd("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp")
-sourceList<-list("ClimateShiny/external/ChkLibs.r","ClimateShiny/external/GetParkBoundary.r")
-unlist(lapply(sourceList,source))
-
 ChkLibs(list("maptools","rgdal","shiny","leaflet","maptools","rgdal","raster","ncdf4","fields","maps",
             "ggplot2","zoo","XML","RColorBrewer","chron","gridExtra","plotrix","jpeg","Cairo"))
 
-Watermark <- readJPEG("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp\\ClimateShiny\\www\\LogoFade.jpg")
+setwd("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp")
 runApp("ClimateShiny")
-#runApp("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\Examples\\shiny-examples-master\\shiny-examples-master\\015-layout-navbar")
+

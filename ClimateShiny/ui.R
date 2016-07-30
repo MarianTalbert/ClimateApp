@@ -1,8 +1,3 @@
- 
-LatLst<-as.list(seq(from=29,to=50))
-LonLst<-as.list(seq(from=-125,to=-67))
-names(LatLst)<-seq(from=29,to=50) 
-names(LonLst)<-seq(from=-125,to=-67)
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage("Climate Primer",

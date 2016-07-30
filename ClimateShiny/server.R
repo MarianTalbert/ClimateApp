@@ -2,21 +2,7 @@
 
 shinyServer(function(input, output,session) {
   dat<-NA
-  #===== Available Shapefiles Update ======#
-  observe({
-		if(is.null(input$InputFile))
-			return()                                                             
-     #add any new shapefiles that have been uploaded to the list
-     unzip(input$InputFile$datapath,exdir=TempLoc)
-     TempShape<-file.path(TempLoc,gsub(".zip","",input$InputFile$name))
-     FileList<-list.files(TempShape,full.names=TRUE) 
-     ShapeFile<-FileList[match(".shp",substr(FileList,nchar(FileList)-3,nchar(FileList)))]
-     ShapeList[[length(ShapeList)+1]]<-ShapeFile
-     names(ShapeList)[length(ShapeList)]<-gsub(".zip","",input$InputFile$name)
-   
-     ShapeList<<-ShapeList #assign this to global
-      updateSelectInput(session, "Dataset", choices = names(ShapeList))
-		})
+
 	#======================================	
 	 # create the map
   values <- reactiveValues(

@@ -1,0 +1,105 @@
+ # a constant list of models associated with emissions scenarios stored as a constant 
+ # so I don't mistype the names
+ # to generate this list I used
+ # temp <- getDataIDs(rGDP)
+ # cat(temp,sep="','")
+
+ #Model List is only used for specifying which CMIP5 are desired and constructing the NEX call
+ModelList<-list(rcp45 = c('ACCESS1-0_pr','ACCESS1-0_tasmax','ACCESS1-0_tasmin','BNU-ESM_pr','BNU-ESM_tasmax','BNU-ESM_tasmin','CCSM4_pr','CCSM4_tasmax','CCSM4_tasmin','CESM1-BGC_pr','CESM1-BGC_tasmax','CESM1-BGC_tasmin','CESM1-CAM5_pr','CESM1-CAM5_tasmax','CESM1-CAM5_tasmin','CMCC-CM_pr','CMCC-CM_tasmax','CMCC-CM_tasmin','CNRM-CM5_pr','CNRM-CM5_tasmax','CNRM-CM5_tasmin','CSIRO-Mk3-6-0_pr','CSIRO-Mk3-6-0_tasmax','CSIRO-Mk3-6-0_tasmin','CanESM2_pr','CanESM2_tasmax','CanESM2_tasmin','FGOALS-g2_pr','FGOALS-g2_tasmax','FGOALS-g2_tasmin','FIO-ESM_pr','FIO-ESM_tasmax','FIO-ESM_tasmin','GFDL-CM3_pr','GFDL-CM3_tasmax','GFDL-CM3_tasmin','GFDL-ESM2G_pr','GFDL-ESM2G_tasmax','GFDL-ESM2G_tasmin','GFDL-ESM2M_pr','GFDL-ESM2M_tasmax','GFDL-ESM2M_tasmin','GISS-E2-H-CC_pr','GISS-E2-H-CC_tasmax','GISS-E2-H-CC_tasmin','GISS-E2-R-CC_pr','GISS-E2-R-CC_tasmax','GISS-E2-R-CC_tasmin','GISS-E2-R_pr','GISS-E2-R_tasmax','GISS-E2-R_tasmin','HadGEM2-AO_pr','HadGEM2-AO_tasmax','HadGEM2-AO_tasmin','HadGEM2-CC_pr','HadGEM2-CC_tasmax','HadGEM2-CC_tasmin','HadGEM2-ES_pr','HadGEM2-ES_tasmax','HadGEM2-ES_tasmin','IPSL-CM5A-LR_pr','IPSL-CM5A-LR_tasmax','IPSL-CM5A-LR_tasmin','IPSL-CM5A-MR_pr','IPSL-CM5A-MR_tasmax','IPSL-CM5A-MR_tasmin','IPSL-CM5B-LR_pr','IPSL-CM5B-LR_tasmax','IPSL-CM5B-LR_tasmin','MIROC-ESM-CHEM_pr','MIROC-ESM-CHEM_tasmax','MIROC-ESM-CHEM_tasmin','MIROC-ESM_pr','MIROC-ESM_tasmax','MIROC-ESM_tasmin','MIROC5_pr','MIROC5_tasmax','MIROC5_tasmin','MPI-ESM-LR_pr','MPI-ESM-LR_tasmax','MPI-ESM-LR_tasmin','MPI-ESM-MR_pr','MPI-ESM-MR_tasmax','MPI-ESM-MR_tasmin','MRI-CGCM3_pr','MRI-CGCM3_tasmax','MRI-CGCM3_tasmin','NorESM1-M_pr','NorESM1-M_tasmax','NorESM1-M_tasmin','bcc-csm1-1-m_pr','bcc-csm1-1-m_tasmax','bcc-csm1-1-m_tasmin','bcc-csm1-1_pr','bcc-csm1-1_tasmax','bcc-csm1-1_tasmin','inmcm4_pr','inmcm4_tasmax','inmcm4_tasmin'),
+
+rcp85 = c('ACCESS1-0_pr','ACCESS1-0_tasmax','ACCESS1-0_tasmin','BNU-ESM_pr','BNU-ESM_tasmax','BNU-ESM_tasmin','CCSM4_pr','CCSM4_tasmax','CCSM4_tasmin','CESM1-BGC_pr','CESM1-BGC_tasmax','CESM1-BGC_tasmin','CESM1-CAM5_pr','CESM1-CAM5_tasmax','CESM1-CAM5_tasmin','CMCC-CM_pr','CMCC-CM_tasmax','CMCC-CM_tasmin','CNRM-CM5_pr','CNRM-CM5_tasmax','CNRM-CM5_tasmin','CSIRO-Mk3-6-0_pr','CSIRO-Mk3-6-0_tasmax','CSIRO-Mk3-6-0_tasmin','CanESM2_pr','CanESM2_tasmax','CanESM2_tasmin','FGOALS-g2_pr','FGOALS-g2_tasmax','FGOALS-g2_tasmin','FIO-ESM_pr','FIO-ESM_tasmax','FIO-ESM_tasmin','GFDL-CM3_pr','GFDL-CM3_tasmax','GFDL-CM3_tasmin','GFDL-ESM2G_pr','GFDL-ESM2G_tasmax','GFDL-ESM2G_tasmin','GFDL-ESM2M_pr','GFDL-ESM2M_tasmax','GFDL-ESM2M_tasmin','GISS-E2-R_pr','GISS-E2-R_tasmax','GISS-E2-R_tasmin','HadGEM2-AO_pr','HadGEM2-AO_tasmax','HadGEM2-AO_tasmin','HadGEM2-CC_pr','HadGEM2-CC_tasmax','HadGEM2-CC_tasmin','HadGEM2-ES_pr','HadGEM2-ES_tasmax','HadGEM2-ES_tasmin','IPSL-CM5A-LR_pr','IPSL-CM5A-LR_tasmax','IPSL-CM5A-LR_tasmin','IPSL-CM5A-MR_pr','IPSL-CM5A-MR_tasmax','IPSL-CM5A-MR_tasmin','IPSL-CM5B-LR_pr','IPSL-CM5B-LR_tasmax','IPSL-CM5B-LR_tasmin','MIROC-ESM-CHEM_pr','MIROC-ESM-CHEM_tasmax','MIROC-ESM-CHEM_tasmin','MIROC-ESM_pr','MIROC-ESM_tasmax','MIROC-ESM_tasmin','MIROC5_pr','MIROC5_tasmax','MIROC5_tasmin','MPI-ESM-LR_pr','MPI-ESM-LR_tasmax','MPI-ESM-LR_tasmin','MPI-ESM-MR_pr','MPI-ESM-MR_tasmax','MPI-ESM-MR_tasmin','MRI-CGCM3_pr','MRI-CGCM3_tasmax','MRI-CGCM3_tasmin','NorESM1-M_pr','NorESM1-M_tasmax','NorESM1-M_tasmin','bcc-csm1-1-m_pr','bcc-csm1-1-m_tasmax','bcc-csm1-1-m_tasmin','bcc-csm1-1_pr','bcc-csm1-1_tasmax','bcc-csm1-1_tasmin','inmcm4_pr','inmcm4_tasmax','inmcm4_tasmin'),
+prism =c('ppt','tmx','tmn'),
+maurer=c("pr","tasmax","tasmin","tas"),
+maca=c("precipitation_amount","min_air_temperature","max_air_temperature")
+)  
+
+#The units for each netcdf is stored in the metadata I save it here so I can convert units as need
+#these have many aliases
+#Time origin is the origin for the julian date (days since x)
+UnitLookup<-list(Nex=list(TimeOrigin = "1950-01-01T00:00:00Z",
+                          Origin=c(month=1,day=1,year=1950),
+                          Temp = "K",
+                          Tas = "K",
+                          Tmin = "K",
+                          Tmax = "K",
+                          Precip = "kgm2s1",
+                          latName =  "latitude",
+                          lonName =  "longitude",
+                          timeName = "time"),
+                 Prism=list(TimeOrigin ='1858-11-17T00:00:00Z',
+                            Path="J:/GIS_Layers/Climate/ClimateCache/PRISM/DerivedData/MergedNetCDF",
+                            Temp ="C",
+                            Tmin ="C",
+                            tmx ="C",
+                            tmn ="C",
+                            Tmax ="C",
+                            Precip ="mm",
+                            ppt ="mm",
+                            latName = "latitude",
+                            lonName = "longitude",
+                            timeName = "time"
+                            ),
+                  MaurerGDP=list(TimeOrigin ='1940-01-01T00:00:00Z',
+                            Path="Maurer/maurer/extracted/hydro.engr.scu.edu/files/gridded_obs/monthly",
+                            Origin=c(month=1,day=1,year=1940),
+                            Temp ="C",
+                            Tmin ="C",
+                            tmx ="C",
+                             tas ="C",
+                            tmn ="C",
+                            tasmax="C",
+                            Tavg="C",
+                            ppt="mm",
+                            Precip ="mm",
+                            latName = "latitude",
+                            lonName = "longitude",
+                            timeName = "time"
+                            ),           
+                 GDO=list(TimeOrigin ='1950-01-01T00:00:00Z',
+                            Path="GDO/BCSD/ftp_mirror/gdo-dcp.ucllnl.org/pub/dcp/archive/cmip5/bcsd/BCSD",
+                            Origin=c(month=1,day=1,year=1950),
+                            Temp ="C",
+                            Tavg ="C",
+                            Tmin ="C",
+                            Tmax ="C",
+                            tas ="C",
+                            tasmin ="C",
+                            tasmax="C",
+                            Prcp="mm_day",
+                            Precip ="mm_day",
+                            pr ="mm_day",
+                            latName = "latitude",
+                            lonName = "longitude",
+                            timeName = "time"
+                            ),
+                 Maurer=list(TimeOrigin ='1950-01-01T00:00:00Z',
+                            Origin=c(month=1,day=1,year=1950),
+                            Temp ="C",
+                            Tmin ="C",
+                            Tmax ="C",
+                             tas ="C",
+                            tasmin ="C",
+                            tasmax="C",
+                            Tavg="C",
+                            Prcp="mm_day",
+                            Precip ="mm_day",
+                            latName = "latitude",
+                            lonName = "longitude",
+                            timeName = "time"
+                            )
+                                                                               
+                 )                    
+                          
+StandardUnits<-function(Units){
+#because the NCDFs can think of so many ways to define the quantities and I only want to deal with a few...
+if(Units%in%c("Temp","tas","Tas"))
+   return("Temp")
+if(Units%in%c("tmx","Tmax","tasmax"))
+   return("Tmax")
+if(Units%in%c("ppt","Precip","pr","precip"))
+   return("Precip")
+if(Units%in%c("tmn","Tmin","tasmin"))
+   return("Tmin")
+return(Units)         
+}
+ 

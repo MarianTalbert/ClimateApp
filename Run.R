@@ -9,6 +9,6 @@ library(gridExtra)
 library(chron)
 library(zoo)
 library(fields)
-
+setwd("C:\\GoogleDrive\\Interactive\\Rcode\\Shiny\\ClimateApp")
 runApp("ClimateShiny")
 
